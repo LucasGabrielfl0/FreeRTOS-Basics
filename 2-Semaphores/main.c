@@ -36,5 +36,5 @@ void app_main()
     xTaskCreate(&task1, "FastTask", 2048, "Task1", 3, NULL );
     xTaskCreate(&task2, "SlowTask", 2048, "Task2", 1, NULL );
 
-
+    //
 }
