@@ -28,12 +28,13 @@ const int Wifi_bit =1;
 
 void app_main() 
 {
+    ConnectHandle = xEventGroupCreate();
+
     // Tasks Running without Mutex, Shows Racing Condition
     xTaskCreate(&ConnectMQTT, "MQTT", 2048, NULL, 3, NULL );
     xTaskCreate(&ConnectWifi, "WIFI", 2048, NULL, 1, NULL );
     xTaskCreate(&ProcessData, "Process", 2048, NULL, 1, NULL );
 
-    ConnectHandle = xEventGroupCreate();
 
 }
 
@@ -60,7 +61,7 @@ void ProcessData()
 {
     while(1)
     {
-        xEventGroupSetBits(ConnectHandle, Wifi_bit);
+        xEventGroupWaitBits(ConnectHandle, Wifi_bit |! MQTT_bit, true, true, portMAX_DELAY);
     }
 
 }
