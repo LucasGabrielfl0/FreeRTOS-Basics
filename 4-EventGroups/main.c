@@ -1,7 +1,9 @@
-/* FreeRTOS Basics Part 1: Tasks and Mutex
-* 1.1 How to Create tasks, 
-* 1.2 Tasks running in specified Cores
-* 1.3 Manage variable access using Mutex
+/* FreeRTOS Basics, Part 4: Event Groups
+* 1.1
+*
+* Problem:  
+* 
+* 
 */
 
 #include <stdio.h>
@@ -12,31 +14,53 @@
 #include "freertos/semphr.h"
 #include "freertos/event_groups.h"
 
-void task1()
-{
+// Prototypes
+void ConnectMQTT();
+void ConnectWifi();
+void ProcessData();
 
-}
 
-void task2()
-{
+// Handle
+EventGroupHandle_t ConnectHandle;
+const int MQTT_bit =1;
+const int Wifi_bit =1;
 
-}
-
-void task_core1()
-{
-
-}
-
-void task_core2()
-{
-
-}
 
 void app_main() 
 {
-    // Tasks
-    xTaskCreate(&task1, "FastTask", 2048, "Task1", 3, NULL );
-    xTaskCreate(&task2, "SlowTask", 2048, "Task2", 1, NULL );
+    // Tasks Running without Mutex, Shows Racing Condition
+    xTaskCreate(&ConnectMQTT, "MQTT", 2048, NULL, 3, NULL );
+    xTaskCreate(&ConnectWifi, "WIFI", 2048, NULL, 1, NULL );
+    xTaskCreate(&ProcessData, "Process", 2048, NULL, 1, NULL );
 
+    ConnectHandle = xEventGroupCreate();
+
+}
+
+
+void ConnectMQTT()
+{
+    while (1)
+    {
+        xEventGroupSetBits(ConnectHandle, MQTT_bit);
+    }
+    
+
+}
+
+void ConnectWifi()
+{
+    while(1)
+    {
+        xEventGroupSetBits(ConnectHandle, Wifi_bit);
+    }
+}
+
+void ProcessData()
+{
+    while(1)
+    {
+        xEventGroupSetBits(ConnectHandle, Wifi_bit);
+    }
 
 }
