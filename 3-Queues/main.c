@@ -1,7 +1,8 @@
-/* FreeRTOS Basics Part 1: Tasks and Mutex
-* 1.1 How to Create tasks, 
-* 1.2 Tasks running in specified Cores
-* 1.3 Manage variable access using Mutex
+/* FreeRTOS Basics Part 3: Queue
+*
+* Problem:
+*
+
 */
 
 #include <stdio.h>
